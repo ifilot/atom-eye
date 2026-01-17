@@ -13,6 +13,9 @@ add_executable(atomeye
     src/molecule.cpp
     src/mesh_library.cpp
     src/background.cpp
+    src/element.cpp
+    src/scene.cpp
+    src/scene_controller.cpp
 )
 
 find_package(glfw3 CONFIG REQUIRED)
