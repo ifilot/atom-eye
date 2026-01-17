@@ -62,9 +62,9 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
-    GLFWwindow* window =
-        glfwCreateWindow(640, 480, "AtomEye", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(640, 480, "AtomEye", nullptr, nullptr);
 
     if (!window) {
         std::cerr << "Failed to create window\n";
@@ -89,8 +89,8 @@ int main() {
     }
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+    glEnable(GL_MULTISAMPLE);
     glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
     // --------------------
@@ -121,6 +121,16 @@ int main() {
             0.5f,
             glm::vec3(0.95f)
         });
+    }
+
+    // Carbon is atom 0
+    for (int i = 1; i <= 4; ++i) {
+        methane.add_bond(
+            0,      // carbon
+            i,      // hydrogen
+            0.2f,   // bond radius
+            glm::vec3(0.6f) // bond color
+        );
     }
 
     // --------------------

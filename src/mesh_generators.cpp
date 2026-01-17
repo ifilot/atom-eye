@@ -81,7 +81,7 @@ MeshData generate_cylinder(unsigned int stack_count,
     // --------------------
 
     for (unsigned int stack = 0; stack < stack_count; ++stack) {
-        float z = static_cast<float>(stack) / (stack_count - 1);
+        float z = stack / (stack_count - 1.0f) - 0.5f; // [-0.5, 0.5]
 
         for (unsigned int slice = 0; slice < slice_count; ++slice) {
             float angle = 2.0f * glm::pi<float>() *
@@ -111,13 +111,13 @@ MeshData generate_cylinder(unsigned int stack_count,
 
             // Triangle 1
             indices.push_back(a);
-            indices.push_back(b);
             indices.push_back(c);
+            indices.push_back(b);
 
             // Triangle 2
             indices.push_back(a);
-            indices.push_back(c);
             indices.push_back(d);
+            indices.push_back(c);
         }
     }
 
