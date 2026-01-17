@@ -8,6 +8,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(atomeye
     src/main.cpp
     src/shader.cpp
+    src/mesh_generators.cpp
+    src/mesh.cpp
 )
 
 find_package(glfw3 CONFIG REQUIRED)

@@ -1,16 +1,14 @@
 #version 330 core
 
-// Vertex attributes (must match glVertexAttribPointer calls)
-layout (location = 0) in vec2 inPos;
-layout (location = 1) in vec3 inColor;
+layout (location = 0) in vec3 in_pos;
+layout (location = 1) in vec3 in_normal;
 
-// Passed to fragment shader
-out vec3 fragColor;
+out vec3 frag_color;
 
-// Uniforms
 uniform mat4 mvp;
 
-void main() {
-    fragColor = inColor;
-    gl_Position = mvp * vec4(inPos, 0.0, 1.0);
+void main()
+{
+    frag_color = normalize(in_normal) * 0.5 + 0.5;
+    gl_Position = mvp * vec4(in_pos, 1.0);
 }
