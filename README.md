@@ -16,7 +16,8 @@ pacman -S --needed \
   mingw-w64-x86_64-gcc \
   mingw-w64-x86_64-cmake \
   mingw-w64-x86_64-ninja \
-  mingw-w64-x86_64-glfw
+  mingw-w64-x86_64-glfw \
+  mingw-w64-x86_64-glm
 ```
 
 ## Compilation
