@@ -9,7 +9,7 @@
  * Holds raw geometry data that can be uploaded to the GPU.
  * This structure has no OpenGL dependencies.
  */
-struct mesh_data {
+struct MeshData {
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> normals;
     std::vector<unsigned int> indices;

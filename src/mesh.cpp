@@ -2,39 +2,61 @@
 
 #include <GL/glew.h>
 
-mesh::mesh(const mesh_data& data)
-    : index_count_(data.indices.size())
+Mesh::Mesh(const MeshData& data)
+    : vao_(0),
+      vbo_{0, 0},
+      ebo_(0),
+      index_count_(static_cast<unsigned int>(data.indices.size()))
 {
+    // --------------------
+    // Create VAO
+    // --------------------
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
 
-    glGenBuffers(1, &vbo_);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-
-    struct vertex {
-        float px, py, pz;
-        float nx, ny, nz;
-    };
-
-    std::vector<vertex> packed;
-    packed.reserve(data.vertices.size());
-
-    for (size_t i = 0; i < data.vertices.size(); ++i) {
-        packed.push_back({
-            data.vertices[i].x,
-            data.vertices[i].y,
-            data.vertices[i].z,
-            data.normals[i].x,
-            data.normals[i].y,
-            data.normals[i].z
-        });
-    }
-
+    // --------------------
+    // Vertices VBO
+    // --------------------
+    glGenBuffers(1, &vbo_[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
     glBufferData(GL_ARRAY_BUFFER,
-                 packed.size() * sizeof(vertex),
-                 packed.data(),
+                 data.vertices.size() * sizeof(glm::vec3),
+                 data.vertices.data(),
                  GL_STATIC_DRAW);
 
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(
+        0,                  // location
+        3,                  // vec3
+        GL_FLOAT,
+        GL_FALSE,
+        sizeof(glm::vec3),
+        nullptr
+    );
+
+    // --------------------
+    // Normals VBO
+    // --------------------
+    glGenBuffers(1, &vbo_[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
+    glBufferData(GL_ARRAY_BUFFER,
+                 data.normals.size() * sizeof(glm::vec3),
+                 data.normals.data(),
+                 GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(
+        1,                  // location
+        3,                  // vec3
+        GL_FLOAT,
+        GL_FALSE,
+        sizeof(glm::vec3),
+        nullptr
+    );
+
+    // --------------------
+    // Element buffer
+    // --------------------
     glGenBuffers(1, &ebo_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
@@ -42,42 +64,29 @@ mesh::mesh(const mesh_data& data)
                  data.indices.data(),
                  GL_STATIC_DRAW);
 
-    // position
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(vertex), (void*)0);
-
-    // normal
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(vertex),
-                          (void*)(3 * sizeof(float)));
-
+    // --------------------
+    // Cleanup
+    // --------------------
     glBindVertexArray(0);
 }
 
-mesh::~mesh() {
-    if (ebo_) glDeleteBuffers(1, &ebo_);
-    if (vbo_) glDeleteBuffers(1, &vbo_);
-    if (vao_) glDeleteVertexArrays(1, &vao_);
+Mesh::~Mesh()
+{
+    if (ebo_) {
+        glDeleteBuffers(1, &ebo_);
+    }
+    glDeleteBuffers(2, vbo_);
+    if (vao_) {
+        glDeleteVertexArrays(1, &vao_);
+    }
 }
 
-mesh::mesh(mesh&& other) noexcept {
-    *this = std::move(other);
-}
-
-mesh& mesh::operator=(mesh&& other) noexcept {
-    vao_ = other.vao_;
-    vbo_ = other.vbo_;
-    ebo_ = other.ebo_;
-    index_count_ = other.index_count_;
-
-    other.vao_ = other.vbo_ = other.ebo_ = 0;
-    other.index_count_ = 0;
-    return *this;
-}
-
-void mesh::draw() const {
+void Mesh::draw() const
+{
     glBindVertexArray(vao_);
-    glDrawElements(GL_TRIANGLES, index_count_, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES,
+                   index_count_,
+                   GL_UNSIGNED_INT,
+                   nullptr);
+    glBindVertexArray(0);
 }

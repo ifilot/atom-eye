@@ -17,7 +17,7 @@
  * The shader class intentionally hides all OpenGL details from users.
  * Consumers interact with it through a minimal, type-safe interface.
  */
-class shader {
+class Shader {
 public:
     /**
      * @brief Construct a shader program from source files.
@@ -31,7 +31,7 @@ public:
      *
      * @throws std::runtime_error if loading, compilation, or linking fails
      */
-    shader(const std::string& vertex_path,
+    Shader(const std::string& vertex_path,
            const std::string& fragment_path);
 
     /**
@@ -40,25 +40,25 @@ public:
      * Releases the owned OpenGL program object.
      * This makes the shader class an RAII type.
      */
-    ~shader();
+    ~Shader();
 
     // Shader programs have unique ownership and cannot be copied
-    shader(const shader&) = delete;
-    shader& operator=(const shader&) = delete;
+    Shader(const Shader&) = delete;
+    Shader& operator=(const Shader&) = delete;
 
     /**
      * @brief Move constructor.
      *
      * Transfers ownership of the OpenGL program from another shader.
      */
-    shader(shader&& other) noexcept;
+    Shader(Shader&& other) noexcept;
 
     /**
      * @brief Move assignment operator.
      *
      * Releases the current program and takes ownership of another.
      */
-    shader& operator=(shader&& other) noexcept;
+    Shader& operator=(Shader&& other) noexcept;
 
     /**
      * @brief Bind this shader program for use.

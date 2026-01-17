@@ -10,6 +10,8 @@ add_executable(atomeye
     src/shader.cpp
     src/mesh_generators.cpp
     src/mesh.cpp
+    src/molecule.cpp
+    src/mesh_library.cpp
 )
 
 find_package(glfw3 CONFIG REQUIRED)

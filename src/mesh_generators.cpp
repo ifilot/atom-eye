@@ -6,8 +6,8 @@
 /**
  * @brief Generate a unit sphere using recursive subdivision.
  */
-mesh_data generate_sphere(unsigned int tesselation_level) {
-    mesh_data result;
+MeshData generate_sphere(unsigned int tesselation_level) {
+    MeshData result;
 
     auto& vertices  = result.vertices;
     auto& normals   = result.normals;
@@ -67,10 +67,10 @@ mesh_data generate_sphere(unsigned int tesselation_level) {
 /**
  * @brief Generate a unit cylinder mesh (radius 1, height 1).
  */
-mesh_data generate_cylinder(unsigned int stack_count,
+MeshData generate_cylinder(unsigned int stack_count,
                             unsigned int slice_count)
 {
-    mesh_data result;
+    MeshData result;
 
     auto& vertices = result.vertices;
     auto& normals  = result.normals;

@@ -15,7 +15,7 @@
  *  3. Link them into an OpenGL program
  *  4. Validate the resulting program
  */
-shader::shader(const std::string& vertex_path,
+Shader::Shader(const std::string& vertex_path,
                const std::string& fragment_path)
 {
     // Load shader source code
@@ -52,7 +52,7 @@ shader::shader(const std::string& vertex_path,
 /**
  * @brief Destroy the shader program.
  */
-shader::~shader() {
+Shader::~Shader() {
     if (program_ != 0) {
         glDeleteProgram(program_);
     }
@@ -61,7 +61,7 @@ shader::~shader() {
 /**
  * @brief Move constructor.
  */
-shader::shader(shader&& other) noexcept {
+Shader::Shader(Shader&& other) noexcept {
     program_ = other.program_;
     other.program_ = 0;
 }
@@ -69,7 +69,7 @@ shader::shader(shader&& other) noexcept {
 /**
  * @brief Move assignment operator.
  */
-shader& shader::operator=(shader&& other) noexcept {
+Shader& Shader::operator=(Shader&& other) noexcept {
     if (this != &other) {
         if (program_ != 0) {
             glDeleteProgram(program_);
@@ -83,42 +83,42 @@ shader& shader::operator=(shader&& other) noexcept {
 /**
  * @brief Bind the shader program.
  */
-void shader::bind() const {
+void Shader::bind() const {
     glUseProgram(program_);
 }
 
 /**
  * @brief Unbind any active shader program.
  */
-void shader::unbind() {
+void Shader::unbind() {
     glUseProgram(0);
 }
 
 /**
  * @brief Set an integer uniform.
  */
-void shader::set_int(const std::string& name, int value) {
+void Shader::set_int(const std::string& name, int value) {
     glUniform1i(get_uniform_location(name), value);
 }
 
 /**
  * @brief Set a floating-point uniform.
  */
-void shader::set_float(const std::string& name, float value) {
+void Shader::set_float(const std::string& name, float value) {
     glUniform1f(get_uniform_location(name), value);
 }
 
 /**
  * @brief Set a vec3 uniform.
  */
-void shader::set_vec3(const std::string& name, const float* value) {
+void Shader::set_vec3(const std::string& name, const float* value) {
     glUniform3fv(get_uniform_location(name), 1, value);
 }
 
 /**
  * @brief Set a mat4 uniform.
  */
-void shader::set_mat4(const std::string& name, const float* value) {
+void Shader::set_mat4(const std::string& name, const float* value) {
     glUniformMatrix4fv(
         get_uniform_location(name), 1, GL_FALSE, value
     );
@@ -127,7 +127,7 @@ void shader::set_mat4(const std::string& name, const float* value) {
 /**
  * @brief Retrieve (and cache) a uniform location.
  */
-int shader::get_uniform_location(const std::string& name) const {
+int Shader::get_uniform_location(const std::string& name) const {
     auto it = uniform_cache_.find(name);
     if (it != uniform_cache_.end()) {
         return it->second;
@@ -141,7 +141,7 @@ int shader::get_uniform_location(const std::string& name) const {
 /**
  * @brief Compile a GLSL shader.
  */
-unsigned int shader::compile(unsigned int type,
+unsigned int Shader::compile(unsigned int type,
                              const std::string& source)
 {
     const unsigned int sh = glCreateShader(type);
@@ -167,7 +167,7 @@ unsigned int shader::compile(unsigned int type,
 /**
  * @brief Load an entire text file into a string.
  */
-std::string shader::load_file(const std::string& path) {
+std::string Shader::load_file(const std::string& path) {
     std::ifstream file(path);
     if (!file) {
         throw std::runtime_error("failed to open shader file: " + path);
