@@ -5,7 +5,7 @@ int main(void)
     if (!glfwInit())
         return -1;
 
-    GLFWwindow* window = glfwCreateWindow(640, 480, "MinGW + GLFW", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(640, 480, "Atom Eye", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
