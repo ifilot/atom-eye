@@ -100,6 +100,14 @@ public:
     void set_vec3(const std::string& name, const float* value);
 
     /**
+     * @brief Set a vec2 uniform.
+     *
+     * @param name  Name of the uniform in the shader
+     * @param value Pointer to three floats
+     */
+    void set_vec2(const std::string& name, const float* value);
+
+    /**
      * @brief Set a mat4 uniform.
      *
      * @param name  Name of the uniform in the shader

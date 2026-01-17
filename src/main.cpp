@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
 #include <cstdlib>
@@ -11,6 +12,7 @@
 #include "mesh.h"
 #include "mesh_generators.h"
 #include "molecule.h"
+#include "background.h"
 
 // --------------------
 // Callbacks
@@ -94,18 +96,24 @@ int main() {
     glFrontFace(GL_CCW);
 
     // --------------------
-    // Shader
+    // Shaders
     // --------------------
-
     Shader basic_shader("shaders/basic.vs", "shaders/basic.fs");
+    Shader blueprint_shader("shaders/blueprint.vs", "shaders/blueprint.fs");
+    blueprint_shader.bind();
+    blueprint_shader.set_vec3("base_color", glm::value_ptr(glm::vec3(0.25f, 0.32f, 0.45f)));
 
+    // --------------------
+    // Meshes and objects
+    // --------------------
+    Background background(blueprint_shader);
     MeshLibrary mesh_library;
     Molecule methane(mesh_library);
 
     methane.add_atom({
         glm::vec3(0.0f),
         1.0f,
-        glm::vec3(0.1f)
+        glm::vec3(0.2f)
     });
 
     std::vector<glm::vec3> dirs = {
@@ -137,12 +145,11 @@ int main() {
     // Render loop
     // --------------------
 
-    glm::mat4 view =
-            glm::lookAt(
-                glm::vec3(0.0f, 0.0f, 10.0f),
-                glm::vec3(0.0f),
-                glm::vec3(0.0f, 1.0f, 0.0f)
-            );
+    glm::mat4 view = glm::lookAt(
+        glm::vec3(0.0f, 0.0f, 10.0f),
+        glm::vec3(0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f)
+    );
 
     while (!glfwWindowShouldClose(window)) {
         int width = 0, height = 0;
@@ -151,17 +158,17 @@ int main() {
         float ratio = width / static_cast<float>(height);
 
         glViewport(0, 0, width, height);
-        glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glm::mat4 proj =
-            glm::perspective(
-                glm::radians(45.0f),
-                ratio,
-                0.1f,
-                100.0f
-            );
+        glm::mat4 proj = glm::perspective(
+            glm::radians(45.0f),
+            ratio,
+            0.1f,
+            100.0f
+        );
 
+        background.draw(width, height);
         methane.draw(basic_shader, view, proj, glfwGetTime());
 
         glfwSwapBuffers(window);

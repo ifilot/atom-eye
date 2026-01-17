@@ -116,6 +116,13 @@ void Shader::set_vec3(const std::string& name, const float* value) {
 }
 
 /**
+ * @brief Set a vec2 uniform.
+ */
+void Shader::set_vec2(const std::string& name, const float* value) {
+    glUniform2fv(get_uniform_location(name), 1, value);
+}
+
+/**
  * @brief Set a mat4 uniform.
  */
 void Shader::set_mat4(const std::string& name, const float* value) {
